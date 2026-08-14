@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personal Finance Manager</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .screen { display: none; }
+    .screen.active { display: block; }
+    .bottom-nav button.active { font-weight: bold; }
+  </style>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2563eb">
+</head>
+
+<body>
+
+  <div id="pinScreen" class="pin-screen">
+
+  <div class="pin-box">
+
+    <div class="pin-icon">🔐</div>
+
+    <h2>Finance Manager</h2>
+    <p>Enter your PIN to continue</p>
+
+    <input
+      type="password"
+      id="loginPIN"
+      inputmode="numeric"
+      maxlength="4"
+      placeholder="••••"
+      autocomplete="off"
+    >
+
+    <button onclick="unlockApp()">
+      🔓 Unlock
+    </button>
+
+    <p id="pinError" class="pin-error"></p>
+
+  </div>
+
+  </div>
+
+  <header class="topbar pro-topbar">
+    <div class="brand-wrap">
+      <button class="menu-btn" type="button" aria-label="Menu">☰</button>
+      <div class="brand-copy">
+        <h1>Finance Manager <span class="verified-badge">✓</span></h1>
+        <p>My Personal Finance</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button class="top-icon" type="button" aria-label="Search">⌕</button>
+      <button class="top-icon notification-btn" type="button" aria-label="Notifications">
+        ♡<span class="notification-dot">3</span>
+      </button>
+      <button class="profile-avatar" type="button" aria-label="Profile">👨🏻‍💼</button>
+      <button id="themeBtn" class="theme-toggle" aria-label="Theme">🌙</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="homeScreen" class="screen active">
+
+<div class="dashboard-kpi pro-kpi" id="dashboardKpi">
+  <div class="kpi-card kpi-balance">
+    <span class="kpi-icon">💼</span><small>Balance</small>
+    <strong id="kpiBalance">Rs. 0</strong><em>Total Balance</em>
+    <div class="mini-line purple-line"></div>
+  </div>
+  <div class="kpi-card kpi-saving">
+    <span class="kpi-icon">📈</span><small>Saving Rate</small>
+    <strong id="kpiSavingRate">0%</strong><em>This Month</em>
+    <div class="mini-line green-line"></div>
+  </div>
+  <div class="kpi-card kpi-goals">
+    <span class="kpi-icon">🎯</span><small>Goals</small>
+    <strong id="kpiGoals">0</strong><em>Active Goals</em>
+    <div class="mini-line orange-line"></div>
+  </div>
+  <div class="kpi-card kpi-health">
+    <div class="health-mini-ring"><span id="homeHealthScore">0</span></div>
+    <small>Health Score</small>
+    <strong><span id="homeHealthScoreText">0</span>/100</strong>
+    <em id="homeHealthStatus">Needs Attention</em>
+  </div>
+</div>
+
+
+
+      
+    <section class="balance-card pro-balance-card">
+      <div class="balance-copy">
+        <p>Total Balance</p>
+        <h2 id="balance">Rs. 0</h2>
+        <button class="balance-detail-btn" type="button">View Details <span>→</span></button>
+      </div>
+      <div class="balance-art" aria-hidden="true">
+        <div class="coin coin-1">₹</div><div class="coin coin-2">₹</div><div class="coin coin-3">₹</div>
+        <div class="wallet-art">👛</div>
+        <span class="sparkle s1">✦</span><span class="sparkle s2">✦</span>
+      </div>
+    </section>
+
+    <section class="cards">
+
+      <div class="card income">
+        <span>🟢</span>
+        <p>Income</p>
+        <h3 id="income">Rs. 0</h3>
+      </div>
+
+      <div class="card expense">
+        <span>🔴</span>
+        <p>Expense</p>
+        <h3 id="expense">Rs. 0</h3>
+      </div>
+
+      <div class="card saving">
+        <span>🟡</span>
+        <p>Savings</p>
+        <h3 id="saving">Rs. 0</h3>
+      </div>
+
+    </section>
+
+    
+<section class="quick-actions-section">
+  <div class="section-title"><h2>⚡ Quick Actions</h2></div>
+  <div class="quick-actions-grid">
+    <button onclick="addIncome()"><span>＋</span><small>Add Income</small></button>
+    <button onclick="addExpense()"><span>−</span><small>Add Expense</small></button>
+    <button onclick="showScreen('accountsScreen')"><span>⇄</span><small>Transfer</small></button>
+    <button onclick="showScreen('goalsScreen')"><span>◔</span><small>Budget</small></button>
+    <button onclick="showScreen('reportsScreen')"><span>▤</span><small>Report</small></button>
+    <button onclick="showScreen('goalsScreen')"><span>◎</span><small>Goal</small></button>
+    <button onclick="showScreen('billsScreen')"><span>▣</span><small>Scan Bill</small></button>
+<button onclick="showScreen('inventoryScreen')"><span>📦</span><small>Inventory</small></button>
+    <button onclick="showScreen('settingsScreen')"><span>•••</span><small>More</small></button>
+  </div>
+</section>
+
+<section class="monthly-summary">
+
+  <div class="section-title">
+    <h2>📅 This Month</h2><button class="section-link" onclick="showScreen('reportsScreen')">View Full Report →</button>
+  </div>
+
+  <div class="summary-grid">
+
+    <div class="summary-item">
+      <span>💰</span>
+      <small>Income</small>
+      <strong id="monthlyIncome">
+        Rs. 0
+      </strong>
+    </div>
+
+    <div class="summary-item">
+      <span>💸</span>
+      <small>Expense</small>
+      <strong id="monthlyExpense">
+        Rs. 0
+      </strong>
+    </div>
+
+    <div class="summary-item">
+      <span>💵</span>
+      <small>Saved</small>
+      <strong id="monthlySaving">
+        Rs. 0
+      </strong>
+    </div>
+
+    <div class="summary-item">
+      <span>📈</span>
+      <small>Saving Rate</small>
+      <strong id="savingRate">
+        0%
+      </strong>
+    </div>
+
+  </div>
+
+</section>
+
+    </section>
+
+    
+<section class="smart-alerts">
+  <div class="section-title">
+    <h2>🔔 Smart Alerts</h2>
+  </div>
+  <div id="smartAlertsList">
+    <p class="empty">No alerts right now.</p>
+  </div>
+</section>
+
+<section id="transactionsScreen" class="screen">
+
+      <section class="actions">
+        <button onclick="addIncome()">＋ Add Income</button>
+        <button onclick="addExpense()">− Add Expense</button>
+      </section>
+
+      <div class="transaction-tools">
+
+  <input
+    type="search"
+    id="transactionSearch"
+    placeholder="🔎 Search transactions..."
+    oninput="filterTransactions()"
+  >
+
+  <select
+    id="transactionFilter"
+    onchange="filterTransactions()"
+  >
+    <option value="all">All</option>
+    <option value="income">Income</option>
+    <option value="expense">Expense</option>
+  </select>
+
+</div>
+
+<div class="transaction-count">
+  <span id="transactionCount">0 transactions</span>
+</div>
+
+      <section class="transactions">
+        <div class="section-title">
+          <h2>Recent Transactions</h2>
+        </div>
+
+        <div id="transactionList">
+          <p class="empty">No transactions yet.</p>
+        </div>
+      </section>
+
+      <section id="recurringSection" class="recurring-section">
+        <div class="section-title">
+          <h2>🔄 Recurring Transactions</h2>
+        </div>
+
+        <button class="budget-btn recurring-add-btn" onclick="openRecurringForm()">
+          ＋ Add Recurring Transaction
+        </button>
+
+        <div id="recurringList"></div>
+      </section>
+
+    </section>
+
+  <!-- Transaction Modal -->
+<div id="transactionModal" class="modal">
+  <div class="modal-box">
+
+    <div class="modal-header">
+      <h2 id="modalTitle">Add Income</h2>
+      <button onclick="closeModal()">✕</button>
+    </div>
+
+    <form id="transactionForm">
+
+      <label>Amount</label>
+      <input
+        type="number"
+        id="amountInput"
+        placeholder="Enter amount"
+        min="1"
+        required
+      >
+
+      <label>Category</label>
+      <select id="categoryInput" required>
+        <option value="">Select Category</option>
+      </select>
+
+      <label>Date</label>
+      <input type="date" id="dateInput" required>
+
+      <label>Note</label>
+      <input
+        type="text"
+        id="noteInput"
+        placeholder="Optional note"
+      >
+
+      <button type="submit" class="save-btn">
+        Save Transaction
+      </button>
+
+    </form>
+
+  </div>
+</div>
+
+  <!-- Recurring Transaction Modal -->
+  <div id="recurringModal" class="modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 id="recurringModalTitle">Add Recurring Transaction</h2>
+        <button onclick="closeRecurringForm()">✕</button>
+      </div>
+
+      <form id="recurringForm">
+        <label>Type</label>
+        <select id="recurringType" required>
+          <option value="">Select Type</option>
+          <option value="income">🟢 Recurring Income</option>
+          <option value="expense">🔴 Recurring Expense</option>
+        </select>
+
+        <label>Amount</label>
+        <input type="number" id="recurringAmount" placeholder="Enter amount" min="1" required>
+
+        <label>Category</label>
+        <select id="recurringCategory" required>
+          <option value="">Select Category</option>
+        </select>
+
+        <label>Frequency</label>
+        <select id="recurringFrequency" required>
+          <option value="">Select Frequency</option>
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="monthly">Monthly</option>
+          <option value="yearly">Yearly</option>
+        </select>
+
+        <label>Start Date</label>
+        <input type="date" id="recurringStartDate" required>
+
+        <label>End Date <small>(optional)</small></label>
+        <input type="date" id="recurringEndDate">
+
+        <label>Note</label>
+        <input type="text" id="recurringNote" placeholder="e.g. Monthly rent">
+
+        <button type="submit" class="save-btn">Save Recurring</button>
+      </form>
+    </div>
+  </div>
+
+  <section id="reportsScreen" class="screen">
+  <div class="section-title">
+    <h2>📊 Reports & Analytics</h2>
+  </div>
+
+  <select id="reportMonth" onchange="updateReports()"></select>
+
+  <div class="report-summary">
+    <div>
+      <small>Income</small>
+      <strong id="reportIncome">Rs. 0</strong>
+    </div>
+
+    <div>
+      <small>Expense</small>
+      <strong id="reportExpense">Rs. 0</strong>
+    </div>
+
+    <div>
+      <small>Saving</small>
+      <strong id="reportSaving">Rs. 0</strong>
+    </div>
+  </div>
+
+  <div class="chart-box">
+    <h3>Income vs Expense</h3>
+
+    <div class="bar-chart">
+      <div>
+        <div id="incomeBar" class="bar income-bar"></div>
+        <span>Income</span>
+      </div>
+
+      <div>
+        <div id="expenseBar" class="bar expense-bar"></div>
+        <span>Expense</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="category-box">
+    <h3>Expense Categories</h3>
+    <div id="categoryReport"></div>
+  </div>
+
+  <div class="financial-insights">
+
+  <div class="section-title">
+    <h2>🧠 Financial Insights</h2>
+  </div>
+
+  <div class="insight-grid">
+
+    <div class="insight-card">
+      <span>🔥</span>
+      <small>Top Expense</small>
+      <strong id="topExpenseCategory">No data</strong>
+    </div>
+
+    <div class="insight-card">
+      <span>📅</span>
+      <small>Daily Average</small>
+      <strong id="dailyAverageExpense">Rs. 0</strong>
+    </div>
+
+    <div class="insight-card">
+      <span>💰</span>
+      <small>Income Difference</small>
+      <strong id="incomeDifference">Rs. 0</strong>
+    </div>
+
+    <div class="insight-card">
+      <span>❤️</span>
+      <small>Financial Health</small>
+      <strong id="financialHealthScore">0 / 100</strong>
+    </div>
+
+  </div>
+
+  <div id="financialWarning" class="financial-warning"></div>
+
+<section class="health-score-card">
+  <div class="section-title">
+    <h2>❤️ Financial Health 2.0</h2>
+  </div>
+  <div class="health-score-head">
+    <div>
+      <small>Overall Score</small>
+      <strong id="healthScore2Value">0 / 100</strong>
+      <span id="healthScore2Status" class="health-status">Needs Attention</span>
+    </div>
+    <div class="health-ring" id="healthScore2Ring">0%</div>
+  </div>
+  <div class="health-breakdown">
+    <div><span>💰 Saving Rate</span><strong id="healthSavingPoints">0/30</strong></div>
+    <div><span>📉 Expense Control</span><strong id="healthExpensePoints">0/25</strong></div>
+    <div><span>🎯 Savings Goals</span><strong id="healthGoalPoints">0/20</strong></div>
+    <div><span>💳 Debt Control</span><strong id="healthDebtPoints">0/15</strong></div>
+    <div><span>🏦 Balance</span><strong id="healthBalancePoints">0/10</strong></div>
+  </div>
+  <div id="healthScore2Advice" class="health-advice">
+    Add income and expense data to calculate your score.
+  </div>
+</section>
+
+
+  </div>
+  </section>
+
+  <section id="goalsScreen" class="screen">
+
+  <div class="section-title">
+    <h2>💰 Budget Manager</h2>
+  </div>
+
+  <div class="budget-total">
+    <small>Monthly Budget</small>
+    <h2 id="monthlyBudget">Rs. 0</h2>
+
+    <div class="budget-progress">
+      <div id="budgetProgress"></div>
+    </div>
+
+    <div class="budget-info">
+      <span id="budgetUsed">Used: Rs. 0</span>
+      <span id="budgetRemaining">Remaining: Rs. 0</span>
+    </div>
+  </div>
+
+  <button class="budget-btn" onclick="setMonthlyBudget()">
+    ⚙️ Set Monthly Budget
+  </button>
+
+  <div class="category-budget">
+    <h3>Category Budgets</h3>
+
+    <select id="budgetCategory">
+      <option value="">Select Category</option>
+    </select>
+
+    <input
+      type="number"
+      id="categoryBudgetAmount"
+      placeholder="Enter budget amount"
+      min="1"
+    >
+
+    <button class="budget-btn" onclick="saveCategoryBudget()">
+      Save Category Budget
+    </button>
+
+    <div id="categoryBudgetList"></div>
+  </div>
+
+
+  <section class="savings-section">
+
+  <div class="section-title">
+    <h2>🎯 Savings Goals</h2>
+  </div>
+
+  <button class="budget-btn" onclick="openSavingsForm()">
+    ＋ Add Savings Goal
+  </button>
+
+  <div id="savingsList"></div>
+
+</section>
+
+<div id="savingsModal" class="modal">
+
+  <div class="modal-box">
+
+    <div class="modal-header">
+      <h2>Add Savings Goal</h2>
+      <button onclick="closeSavingsForm()">✕</button>
+    </div>
+
+    <form id="savingsForm">
+
+      <label>Goal Name</label>
+      <input
+        type="text"
+        id="goalName"
+        placeholder="e.g. New Phone"
+        required
+      >
+
+      <label>Target Amount</label>
+      <input
+        type="number"
+        id="goalTarget"
+        placeholder="Enter target amount"
+        min="1"
+        required
+      >
+
+      <label>Already Saved</label>
+      <input
+        type="number"
+        id="goalSaved"
+        placeholder="Enter saved amount"
+        min="0"
+        value="0"
+      >
+
+      <label>Target Date</label>
+      <input
+        type="date"
+        id="goalDate"
+      >
+
+      <button type="submit" class="save-btn">
+        Save Goal
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+  <section class="debt-section">
+
+  <div class="section-title">
+    <h2>💳 Debt & Credit</h2>
+  </div>
+
+  <div class="debt-summary">
+    <div>
+      <small>Receive</small>
+      <strong id="totalReceive">Rs. 0</strong>
+    </div>
+
+    <div>
+      <small>Pay</small>
+      <strong id="totalPay">Rs. 0</strong>
+    </div>
+  </div>
+
+  <button class="budget-btn" onclick="openDebtForm()">
+    ＋ Add Debt / Credit
+  </button>
+
+  <div id="debtList"></div>
+
+</section>
+
+  </section>
+
+<div id="debtModal" class="modal">
+
+  <div class="modal-box">
+
+    <div class="modal-header">
+      <h2>Add Debt / Credit</h2>
+      <button onclick="closeDebtForm()">✕</button>
+    </div>
+
+    <form id="debtForm">
+
+      <label>Type</label>
+
+      <select id="debtType" required>
+        <option value="">Select Type</option>
+        <option value="receive">💰 I Will Receive</option>
+        <option value="pay">💸 I Will Pay</option>
+      </select>
+
+      <label>Person / Description</label>
+
+      <input
+        type="text"
+        id="debtPerson"
+        placeholder="e.g. Ali"
+        required
+      >
+
+      <label>Total Amount</label>
+
+      <input
+        type="number"
+        id="debtAmount"
+        placeholder="Enter amount"
+        min="1"
+        required
+      >
+
+      <label>Paid Amount</label>
+
+      <input
+        type="number"
+        id="debtPaid"
+        placeholder="Enter paid amount"
+        min="0"
+        value="0"
+      >
+
+      <label>Due Date</label>
+
+      <input
+        type="date"
+        id="debtDate"
+      >
+
+      <label>Note</label>
+
+      <input
+        type="text"
+        id="debtNote"
+        placeholder="Optional note"
+      >
+
+      <button type="submit" class="save-btn">
+        Save Debt
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+  
+
+<section id="inventoryScreen" class="screen">
+  <div class="section-title"><h2>📦 Inventory</h2><button class="section-link" onclick="showScreen('inventoryReportsScreen')">View Reports →</button></div>
+  <div class="inventory-kpis">
+    <div class="inventory-kpi inv-blue"><span>📦</span><small>Total Items</small><strong id="inventoryTotalItems">0</strong></div>
+    <div class="inventory-kpi inv-green"><span>💰</span><small>Stock Value</small><strong id="inventoryStockValue">Rs. 0</strong></div>
+    <div class="inventory-kpi inv-orange"><span>⚠️</span><small>Low Stock</small><strong id="inventoryLowStock">0</strong></div>
+    <div class="inventory-kpi inv-red"><span>↕️</span><small>Out of Stock</small><strong id="inventoryOutStock">0</strong></div>
+  </div>
+  <div class="inventory-actions">
+    <button class="inventory-action primary" onclick="openInventoryItemModal()">＋ Add Item</button>
+    <button class="inventory-action" onclick="openInventoryStockModal('in')">📥 Stock In</button>
+    <button class="inventory-action" onclick="openInventoryStockModal('out')">📤 Stock Out</button>
+    <button class="inventory-action" onclick="showScreen('inventoryReportsScreen')">📊 Inventory Reports</button>
+  </div>
+  <div class="inventory-toolbar">
+    <input id="inventorySearch" type="search" placeholder="🔎 Search item, brand or category..." oninput="renderInventory()">
+    <select id="inventoryCategoryFilter" onchange="renderInventory()"><option value="">All Categories</option></select>
+  </div>
+  <div class="inventory-alert" id="inventoryAlert"></div>
+  <div class="inventory-table-wrap">
+    <div class="inventory-table-head"><span>Item</span><span>Category</span><span>Qty</span><span>Sale/Cost</span><span>Status</span><span>Action</span></div>
+    <div id="inventoryList"></div>
+  </div>
+</section>
+<section id="inventoryReportsScreen" class="screen">
+  <div class="section-title"><h2>📊 Inventory Reports</h2><button class="section-link" onclick="showScreen('inventoryScreen')">← Inventory</button></div>
+  <div class="inventory-report-grid">
+    <div class="report-stat"><small>Total Stock Value</small><strong id="invReportStockValue">Rs. 0</strong></div>
+    <div class="report-stat"><small>Total Units</small><strong id="invReportUnits">0</strong></div>
+    <div class="report-stat"><small>Stock In Units</small><strong id="invReportStockIn">0</strong></div>
+    <div class="report-stat"><small>Stock Out Units</small><strong id="invReportStockOut">0</strong></div>
+  </div>
+  <div class="inventory-report-card"><div class="section-title"><h3>📈 Stock Movement</h3></div>
+    <div class="movement-bars">
+      <div><span>Stock In</span><div class="bar-track"><i id="invInBar"></i></div><b id="invInPercent">0%</b></div>
+      <div><span>Stock Out</span><div class="bar-track"><i id="invOutBar"></i></div><b id="invOutPercent">0%</b></div>
+    </div>
+  </div>
+  <div class="inventory-report-card"><div class="section-title"><h3>🏷️ Category Summary</h3></div><div id="inventoryCategoryReport"></div></div>
+  <div class="inventory-report-card"><div class="section-title"><h3>⚠️ Low Stock Items</h3></div><div id="inventoryLowStockReport"></div></div>
+</section>
+
+<section id="accountsScreen" class="screen">
+  <div class="section-title">
+    <h2>🏦 Accounts / Wallets</h2>
+  </div>
+
+  <div class="accounts-total-card">
+    <small>Total Money</small>
+    <h2 id="accountsTotalBalance">Rs. 0</h2>
+  </div>
+
+  <div class="account-actions">
+    <button class="budget-btn" onclick="openAccountForm()">＋ Add Account</button>
+    <button class="transfer-btn" onclick="openTransferForm()">🔄 Transfer</button>
+  </div>
+
+  <div id="accountsList"></div>
+
+<div class="transfer-history-section">
+  <div class="section-title">
+    <h2>🔄 Transfer History</h2>
+  </div>
+  <div id="transferHistoryList">
+    <p class="empty">No transfers yet.</p>
+  </div>
+</div>
+
+</section>
+
+<div id="accountModal" class="modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2 id="accountModalTitle">Add Account</h2>
+      <button onclick="closeAccountForm()">✕</button>
+    </div>
+
+    <form id="accountForm">
+      <label>Account Name</label>
+      <input id="accountName" type="text" placeholder="e.g. Cash" required>
+
+      <label>Account Type</label>
+      <select id="accountType" required>
+        <option value="">Select Type</option>
+        <option value="cash">💵 Cash</option>
+        <option value="bank">🏦 Bank</option>
+        <option value="easypaisa">📱 Easypaisa</option>
+        <option value="jazzcash">📱 JazzCash</option>
+        <option value="card">💳 Card</option>
+        <option value="other">📦 Other</option>
+      </select>
+
+      <label>Opening Balance</label>
+      <input id="accountBalance" type="number" min="0" placeholder="Enter balance" required>
+
+      <button type="submit" class="save-btn">Save Account</button>
+    </form>
+  </div>
+</div>
+
+<div id="transferModal" class="modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2>🔄 Transfer Money</h2>
+      <button onclick="closeTransferForm()">✕</button>
+    </div>
+
+    <form id="transferForm">
+      <label>From Account</label>
+      <select id="transferFrom" required></select>
+
+      <label>To Account</label>
+      <select id="transferTo" required></select>
+
+      <label>Amount</label>
+      <input id="transferAmount" type="number" min="1" placeholder="Enter amount" required>
+
+      <label>Note</label>
+      <input id="transferNote" type="text" placeholder="Optional note">
+
+      <button type="submit" class="save-btn">Transfer Money</button>
+    </form>
+  </div>
+</div>
+
+
+<section id="assistantScreen" class="screen">
+  <div class="section-title">
+    <h2>🤖 Smart Finance Assistant</h2>
+  </div>
+
+  <div class="assistant-card">
+    <div class="assistant-intro">
+      <div class="assistant-avatar">🤖</div>
+      <div>
+        <strong>Finance Assistant</strong>
+        <small>Ask about your money, spending and savings.</small>
+      </div>
+    </div>
+
+    <div class="assistant-suggestions">
+      <button onclick="askFinanceAssistant('How much did I spend this month?')">💸 Monthly expense</button>
+      <button onclick="askFinanceAssistant('What is my biggest expense category?')">🔥 Biggest expense</button>
+      <button onclick="askFinanceAssistant('How much did I save this month?')">💰 My savings</button>
+      <button onclick="askFinanceAssistant('How is my financial health?')">❤️ Financial health</button>
+    </div>
+
+    <div class="assistant-chat" id="assistantChat">
+      <div class="assistant-message">
+        👋 Ask me a finance question or choose a suggestion above.
+      </div>
+    </div>
+
+    <form id="assistantForm" class="assistant-form">
+      <input id="assistantInput" type="text" placeholder="e.g. How much did I spend?" autocomplete="off">
+      <button type="submit">Send</button>
+    </form>
+  </div>
+</section>
+
+
+<section id="backupScreen" class="screen">
+  <div class="section-title">
+    <h2>🔐 Backup & Security</h2>
+  </div>
+
+  <div class="security-card">
+    <div class="security-row">
+      <div>
+        <strong>🔒 App Lock</strong>
+        <small>Protect the app with your existing PIN.</small>
+      </div>
+      <span class="security-badge">ACTIVE</span>
+    </div>
+
+    <div class="security-row">
+      <div>
+        <strong>💾 Local Backup</strong>
+        <small>Export all finance data as a JSON file.</small>
+      </div>
+      <button class="security-btn" onclick="exportFinanceBackup()">Export</button>
+    </div>
+
+    <div class="security-row">
+      <div>
+        <strong>♻️ Restore Backup</strong>
+        <small>Import a previously exported JSON backup.</small>
+      </div>
+      <button class="security-btn" onclick="document.getElementById('backupFileInput').click()">Import</button>
+    </div>
+
+    <div class="security-row">
+      <div>
+        <strong>📅 Last Backup</strong>
+        <small id="lastBackupText">No backup recorded.</small>
+      </div>
+      <span>💾</span>
+    </div>
+
+    <input
+      id="backupFileInput"
+      type="file"
+      accept=".json,application/json"
+      style="display:none"
+      onchange="importFinanceBackup(event)"
+    />
+  </div>
+
+  <div class="security-note">
+    <strong>⚠️ Important</strong>
+    <p>Your backup file contains your finance data. Keep it in a secure location.</p>
+  </div>
+</section>
+
+
+<section id="exportScreen" class="screen">
+  <div class="section-title">
+    <h2>📤 Export & Reports</h2>
+  </div>
+
+  <div class="export-card">
+    <h3>📊 Financial Report</h3>
+    <p>Export a clean summary of your income, expenses, savings, accounts, goals and debt.</p>
+    <button class="export-main-btn" onclick="exportFinancialReport()">📄 Export Report</button>
+    <button class="export-print-btn" onclick="printFinancialReport()">🖨️ Print Report</button>
+  </div>
+
+  <div class="export-card">
+    <h3>📋 Transactions</h3>
+    <p>Download all available transactions as a CSV file.</p>
+    <button class="export-main-btn" onclick="exportTransactionsCSV()">📥 Export CSV</button>
+  </div>
+
+  <div class="export-card">
+    <h3>💾 Full Backup</h3>
+    <p>Use Backup & Security for complete JSON backup and restore.</p>
+    <button class="export-secondary-btn" onclick="showScreen('backupScreen')">🔐 Open Backup</button>
+  </div>
+</section>
+
+
+<section id="billsScreen" class="screen">
+  <div class="section-title">
+    <h2>🔔 Bills & Reminders</h2>
+  </div>
+
+  <div class="bills-summary">
+    <div><small>Upcoming</small><strong id="upcomingBillsCount">0</strong></div>
+    <div><small>Due Soon</small><strong id="dueSoonBillsCount">0</strong></div>
+    <div><small>Overdue</small><strong id="overdueBillsCount">0</strong></div>
+  </div>
+
+  <button class="budget-btn bills-add-btn" onclick="openBillForm()">＋ Add Bill</button>
+
+  <div id="billsList">
+    <p class="empty">No bills added yet.</p>
+  </div>
+</section>
+
+<div id="billModal" class="modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2 id="billModalTitle">Add Bill</h2>
+      <button onclick="closeBillForm()">✕</button>
+    </div>
+
+    <form id="billForm">
+      <label>Bill Name</label>
+      <input id="billName" type="text" placeholder="e.g. Internet" required>
+
+      <label>Amount</label>
+      <input id="billAmount" type="number" min="0" placeholder="Enter amount" required>
+
+      <label>Due Date</label>
+      <input id="billDate" type="date" required>
+
+      <label>Repeat</label>
+      <select id="billRepeat">
+        <option value="none">One time</option>
+        <option value="weekly">Weekly</option>
+        <option value="monthly">Monthly</option>
+        <option value="yearly">Yearly</option>
+      </select>
+
+      <label>Note</label>
+      <input id="billNote" type="text" placeholder="Optional note">
+
+      <button type="submit" class="save-btn">Save Bill</button>
+    </form>
+  </div>
+</div>
+
+<section id="settingsScreen" class="screen">
+
+<div class="settings-section theme-settings">
+  <div class="section-title">
+    <h2>🎨 Appearance</h2>
+  </div>
+
+  <div class="theme-options">
+    <button onclick="setFinanceTheme('light')">☀️ Light</button>
+    <button onclick="setFinanceTheme('dark')">🌙 Dark</button>
+    <button onclick="setFinanceTheme('system')">📱 System</button>
+  </div>
+
+  <div class="accent-options">
+    <small>Accent Color</small>
+    <div class="accent-row">
+      <button onclick="setFinanceAccent('#2563eb')" style="--accent:#2563eb"></button>
+      <button onclick="setFinanceAccent('#16a34a')" style="--accent:#16a34a"></button>
+      <button onclick="setFinanceAccent('#7c3aed')" style="--accent:#7c3aed"></button>
+      <button onclick="setFinanceAccent('#ea580c')" style="--accent:#ea580c"></button>
+    </div>
+  </div>
+</div>
+
+
+  <div class="section-title">
+    <h2>⚙️ Settings</h2>
+  </div>
+
+  <div class="setting-item">
+    <div>
+      <strong>🔐 PIN Lock</strong>
+      <small>Protect your finance data</small>
+    </div>
+    <button onclick="changePIN()">Change PIN</button>
+  </div>
+
+  <div class="setting-item">
+    <div>
+      <strong>💾 Backup</strong>
+      <small>Save all finance data</small>
+    </div>
+    <button onclick="backupData()">Backup</button>
+  </div>
+
+  <div class="setting-item">
+    <div>
+      <strong>♻️ Restore</strong>
+      <small>Restore previous backup</small>
+    </div>
+    <button onclick="document.getElementById('restoreFile').click()">
+      Restore
+    </button>
+
+    <input
+      type="file"
+      id="restoreFile"
+      accept=".json"
+      hidden
+      onchange="restoreData(event)"
+    >
+  </div>
+
+  <div class="setting-item danger">
+    <div>
+      <strong>🗑️ Clear All Data</strong>
+      <small>Delete all finance records</small>
+    </div>
+    <button onclick="clearAllData()">Clear</button>
+  </div>
+
+  </section>
+
+  </main>
+
+  <nav class="bottom-nav">
+
+  <button onclick="showScreen('homeScreen', this)" class="active">
+    🏠
+    <span>Home</span>
+  </button>
+
+  <button onclick="showScreen('transactionsScreen', this)">
+    💸
+    <span>Transactions</span>
+  </button>
+
+  <button onclick="showScreen('reportsScreen', this)">
+    📊
+    <span>Reports</span>
+  </button>
+
+  <button onclick="showScreen('goalsScreen', this)">
+    🎯
+    <span>Goals</span>
+  </button>
+
+  <button onclick="showScreen('accountsScreen', this)">
+    🏦
+    <span>Accounts</span>
+  </button>
+    <button onclick="showScreen('inventoryScreen', this)">
+     📦
+     <span>Inventory</span>
+    </button>
+
+  <button onclick="showScreen('assistantScreen', this)">
+    🤖
+    <span>AI</span>
+  </button>
+
+  <button onclick="showScreen('backupScreen', this)">
+    🔐
+    <span>Backup</span>
+  </button>
+
+  <button onclick="showScreen('exportScreen', this)">
+    📤
+    <span>Export</span>
+  </button>
+
+  <button onclick="showScreen('billsScreen', this)">
+    🔔
+    <span>Bills</span>
+  </button>
+
+  <button onclick="showScreen('settingsScreen', this)">
+    ⚙️
+    <span>Settings</span>
+  </button>
+
+</nav>
+
+  <script>
+    function showScreen(screenId, button) {
+      document.querySelectorAll(".screen").forEach(function(screen) {
+        screen.classList.remove("active");
+      });
+
+      var selected = document.getElementById(screenId);
+      if (selected) selected.classList.add("active");
+
+      document.querySelectorAll(".bottom-nav button").forEach(function(btn) {
+        btn.classList.remove("active");
+      });
+
+      if (button) button.classList.add("active");
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  </script>
+  <script src="js/app.js"></script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js")
+      .catch(error => console.log("Service Worker registration failed:", error));
+  });
+}
+</script>
+
+
+<div id="inventoryItemModal" class="modal"><div class="modal-content inventory-modal-content">
+  <button class="modal-close" onclick="closeInventoryModals()">×</button><h2>📦 Add Inventory Item</h2>
+  <form onsubmit="saveInventoryItem(event)">
+    <label>Item Name</label><input id="invItemName" required placeholder="e.g. iPhone 11 LCD">
+    <label>Category</label><input id="invItemCategory" required placeholder="LCD / Battery / Charging Port">
+    <label>Brand / Model</label><input id="invItemBrand" placeholder="e.g. Apple iPhone 11">
+    <div class="two-inputs"><div><label>Quantity</label><input id="invItemQty" type="number" min="0" value="0" required></div><div><label>Min Stock</label><input id="invItemMin" type="number" min="0" value="2" required></div></div>
+    <div class="two-inputs"><div><label>Cost / Unit</label><input id="invItemCost" type="number" min="0" step="0.01" value="0"></div><div><label>Sale / Unit</label><input id="invItemSale" type="number" min="0" step="0.01" value="0"></div></div>
+    <button class="save-btn" type="submit">Save Item</button>
+  </form>
+</div></div>
+<div id="inventoryStockModal" class="modal"><div class="modal-content inventory-modal-content">
+  <button class="modal-close" onclick="closeInventoryModals()">×</button><h2 id="inventoryStockTitle">📥 Stock In</h2>
+  <form onsubmit="saveInventoryMovement(event)">
+    <input type="hidden" id="invMovementType"><label>Item</label><select id="invMovementItem" required></select>
+    <label>Quantity</label><input id="invMovementQty" type="number" min="1" required>
+    <label>Note</label><input id="invMovementNote" placeholder="Supplier / reason / invoice">
+    <button class="save-btn" type="submit">Save Movement</button>
+  </form>
+</div></div>
+
+</body>
+</html>
